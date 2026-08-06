@@ -1,10 +1,12 @@
 const userModel = require('../models/userModel');
 const { AppError } = require('../middleware/errorHandler');
-const generateAccessToken = require('../utils/jwt').generateAccessToken;
-const generateRefreshToken = require('../utils/jwt').generateRefreshToken;
 const cookie = require('cookie');
-const hashPW = require('../utils/jwt').hashPassword;
-const comparePW = require('../utils/jwt').comparePassword;
+const { 
+    generateAccessToken, 
+    generateRefreshToken, 
+    hashPassword: hashPW, 
+    comparePassword: comparePW 
+} = require('../utils/jwt');
 
 const login = async (req, res, next) => {
     try {
@@ -65,11 +67,13 @@ const register = async (req, res, next) => {
         const newUserId = await userModel.create({ name, email, password: hashedPassword, role: 'karyawan' });
         const newUser = await userModel.getById(newUserId);
 
+        const payload = { id: newUser.id, role: newUser.role };
         const accessToken = generateAccessToken({ id: newUser.id, role: newUser.role });
         const refreshToken = generateRefreshToken({ id: newUser.id, role: newUser.role });
 
         return res.json({
             message: "User registered successfully",
+            accessToken,
             data: {
                 name: newUser.name,
                 email: newUser.email,
@@ -93,7 +97,7 @@ const logout = async (req, res, next) => {
         return res.json({
             message: "Successfully logged out"
         });
-        
+
     } catch (error) {
         next(error);
     }
