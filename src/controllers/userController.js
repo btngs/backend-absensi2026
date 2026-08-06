@@ -1,13 +1,19 @@
 const userModel = require('../models/userModel');
+const { AppError } = require('../middleware/errorHandler');
 
-const createNewUser = async (req, res) => {
+const createNewUser = async (req, res, next) => {
     try {
         const { name, email, password, role } = req.body || {};
     
         if (!name || !email || !password || !role) {
-            return res.status(400).json({
-                message: "All fields are required"
-            });
+            return next(new AppError('All fields are required', 400, {
+                example: {
+                    name: 'name',
+                    email: 'name@example.com',
+                    password: 'password',
+                    role: 'karyawan'
+                }
+            }));
         }
     
         const id = await userModel.create({ name, email, password, role });
@@ -16,15 +22,11 @@ const createNewUser = async (req, res) => {
             data: { id, name, email, role }
         })
     } catch (error) {
-        console.error(error);
-        return res.status(500).json({
-            message: "Error creating user",
-            error: error.message
-        });
+        next(error);
     }
 };
 
-const getAllUsers = async (req, res) => {
+const getAllUsers = async (req, res, next) => {
     try {
         const result = await userModel.getAll();
         return res.json({
@@ -32,22 +34,16 @@ const getAllUsers = async (req, res) => {
             data: result
         });
     } catch (error) {
-        console.error(error);
-        return res.status(500).json({
-            message: "Error retrieving users",
-            error: error.message
-        })
+        next(error);
     }
 };
 
-const getUser = async (req, res) => {
+const getUser = async (req, res, next) => {
     try {
         const {id} = req.params;
         const result = await userModel.getById(id);
 
-        if (!result) return res.status(404).json({
-            message: "User not found"
-        });
+        if (!result) return next(new AppError('User not found', 404));
 
         return res.json({
             message: "success",
@@ -55,28 +51,29 @@ const getUser = async (req, res) => {
         });
 
     } catch (error) {
-        console.error(error);
-        return res.status(500).json({
-            message: "Error retrieving user",
-            error: error.message
-        });
+        next(error);
     }
 };
 
-const updateUser = async (req, res) => {
+const updateUser = async (req, res, next) => {
     try {
         const { id } = req.params;
         const { name, email, password, role } = req.body || {};
 
         if (!name || !email || !password || !role) {
-            return res.status(400).json({
-                message: "All fields are required"
-            });
+            return next(new AppError('All fields are required', 400, {
+                example: {
+                    name: 'name',
+                    email: 'name@example.com',
+                    password: 'password',
+                    role: 'karyawan'
+                }
+            }));
         }
 
         const affectedRows = await userModel.update(id, { name, email, password, role });
         if (affectedRows === 0) {
-            return res.status(404).json({ message: "User not found" });
+            return next(new AppError('User not found', 404));
         }
 
         return res.json({
@@ -87,22 +84,18 @@ const updateUser = async (req, res) => {
     
 
     } catch (error) {
-        console.error(error);
-        return res.status(500).json({
-            message: "Error updating user",
-            error: error.message
-        });
+        next(error);
     }
 
 }
 
-const deleteUser = async(req, res) => {
+const deleteUser = async(req, res, next) => {
     try {
         const { id } = req.params;
         const affectedRows = await userModel.remove(id);
 
         if (affectedRows === 0) {
-            return res.status(404).json({ message: "User not found" });
+            return next(new AppError('User not found', 404));
         }
 
         return res.json({
@@ -110,11 +103,7 @@ const deleteUser = async(req, res) => {
             data: { id }
         });
     } catch (error) {
-        console.error(error);
-        return res.status(500).json({
-            message: "Error deleting user",
-            error: error.message
-        });
+        next(error);
     }
 };
 
