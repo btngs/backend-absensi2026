@@ -1,6 +1,12 @@
 const conn = require('../config/connection.js');
 
 const userModel = {
+
+    getByEmail: async (email) => {
+        const [rows] = await conn.execute('SELECT * FROM users WHERE email = ?', [email]);
+        return rows[0];
+    },
+
     getAll: async () => {
         const [rows] = await conn.execute('SELECT id, name, email, role, created_at FROM users');
         return rows;
@@ -34,5 +40,7 @@ const userModel = {
         return result.affectedRows;
     }
 };
+
+
 
 module.exports = userModel;
