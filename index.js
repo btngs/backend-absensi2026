@@ -13,7 +13,7 @@ const { notFoundHandler, errorHandler } = require('./src/middleware/errorHandler
 //essentials
 const cors = require('cors');
 const cookieParser = require('cookie-parser');
-const serverless = require('serverless-http');
+// const serverless = require('serverless-http');
 const corsOptions = {
     origin: 'http://localhost:3000',
     methods: ['GET', 'POST', 'PUT', 'DELETE'],
@@ -27,9 +27,9 @@ app.use(middlewareLog.logRequest);
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-app.use('/api/users', usersRoutes);
-app.use('/api/auth', authRoutes);
-app.use('/api/attendance', attendanceRoutes);
+app.use('/users', usersRoutes);
+app.use('/auth', authRoutes);
+app.use('/attendance', attendanceRoutes);
 app.use(notFoundHandler);
 app.use(errorHandler);
 
@@ -41,4 +41,4 @@ if(process.env.NODE_ENV !== 'production') {
 };
 
 module.exports = app;
-module.exports.handler = serverless(app);
+// module.exports.handler = serverless(app);    
