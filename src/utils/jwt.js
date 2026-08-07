@@ -13,6 +13,10 @@ const comparePassword = async (password, hashedPassword) => {
     return await bcrypt.compare(password, hashedPassword);
 }
 
+const verifyAccessToken = (token) => {
+    return jwt.verify(token, ACCESS_SECRET);
+}
+
 const generateAccessToken = (payLoad) => {
     return jwt.sign(payLoad, ACCESS_SECRET, { expiresIn: '30m' });
 }
@@ -25,5 +29,6 @@ module.exports = {
     hashPassword,
     comparePassword,
     generateAccessToken,
-    generateRefreshToken
+    generateRefreshToken,
+    verifyAccessToken
 };

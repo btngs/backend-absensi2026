@@ -1,5 +1,9 @@
 const userModel = require('../models/userModel');
 const { AppError } = require('../middleware/errorHandler');
+const { 
+    hashPassword: hashPW, 
+    comparePassword: comparePW
+    } = require('../utils/jwt')
 
 const createNewUser = async (req, res, next) => {
     try {
@@ -15,12 +19,14 @@ const createNewUser = async (req, res, next) => {
                 }
             }));
         }
+
+        const hashedPassword = await hashPW(password);
     
-        const id = await userModel.create({ name, email, password, role });
+        const id = await userModel.create({ name, email, password: hashedPassword, role });
         return res.status(201).json({
             message: "User created successfully",
             data: { id, name, email, role }
-        })
+        });
     } catch (error) {
         next(error);
     }
@@ -71,7 +77,9 @@ const updateUser = async (req, res, next) => {
             }));
         }
 
-        const affectedRows = await userModel.update(id, { name, email, password, role });
+        const hashedPassword = await hashPW(password)
+
+        const affectedRows = await userModel.update(id, { name, email, password: hashedPassword, role });
         if (affectedRows === 0) {
             return next(new AppError('User not found', 404));
         }
