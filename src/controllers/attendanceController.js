@@ -92,12 +92,13 @@ const attendanceController = {
   getAllAttendances: async (req, res, next) => {
     try {
       const attendances = await AttendanceModel.findAllWithUser();
-
+      console.logq("RESULT:", attendances);
       return res.status(200).json({
         success: true,
         message: 'Seluruh data absensi berhasil diambil',
         data: attendances
       });
+
     } catch (error) {
       next(error);
     }

@@ -58,25 +58,29 @@ const attendanceModel = {
   },
 
   findAllWithUser: async () => {
-    const query = `
-      SELECT 
-        a.id,
-        a.tanggal,
-        a.jam_masuk,
-        a.jam_keluar,
-        a.status,
-        a.keterangan,
-        a.created_at,
-        u.id AS user_id,
-        u.name,
-        u.email
-      FROM attendances a
-      JOIN users u ON a.user_id = u.id
-      ORDER BY a.tanggal DESC, a.jam_masuk DESC
-    `;
-
-    const [result] = await conn.execute(query);
-    return result;
+      const query = `
+          SELECT 
+              a.id,
+              a.tanggal,
+              a.jam_masuk,
+              a.jam_keluar,
+              a.status,
+              a.keterangan,
+              a.created_at,
+              u.id AS user_id,
+              u.name,
+              u.email,
+              u.role
+          FROM attendances a
+          JOIN users u ON a.user_id = u.id
+          ORDER BY a.tanggal DESC, a.jam_masuk DESC
+      `;
+  
+      const [result] = await conn.execute(query);
+  
+      console.log('ATTENDANCE RESULT:', result);
+  
+      return result;
   },
 
   findById: async (id) => {
