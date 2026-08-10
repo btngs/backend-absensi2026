@@ -34,7 +34,7 @@ app.use(notFoundHandler);
 app.use(errorHandler);
 
 if(process.env.NODE_ENV !== 'production') {
-    const PORT = process.env.PORT;
+    const PORT = process.env.DB_PORT;
     app.listen(PORT, () => {
         console.log(`app listening from port ${PORT}`);
     });

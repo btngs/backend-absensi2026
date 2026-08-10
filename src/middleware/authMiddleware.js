@@ -16,7 +16,7 @@ const authToken = (req, res, next) => {
 
         next();
     } catch (error) {
-        return next(new AppError('Invalid or expired access token', 403));
+        return next(new AppError('Invalid or expired access token', 403));  
     }
 }
 
