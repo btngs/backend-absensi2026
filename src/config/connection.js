@@ -23,14 +23,4 @@ const conn = mysql.createPool({
     queueLimit: 0
 });
 
-(async () => {
-  try {
-    const connection = await conn.getConnection();
-    console.log("✅ Connected to MySQL");
-    connection.release();
-  } catch (err) {
-    console.error(err);
-  }
-})();
-
 module.exports =  conn;
