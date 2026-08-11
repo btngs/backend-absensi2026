@@ -24,9 +24,10 @@ const createNewUser = async (req, res, next) => {
         const hashedPassword = await hashPW(password);
     
         const id = await userModel.create({ name, email, phone_number, password: hashedPassword, role });
+        const createdUser = await userModel.getById(id);
         return res.status(201).json({
             message: "User created successfully",
-            data: { id, name, email, phone_number, role }
+            data: createdUser
         });
     } catch (error) {
         next(error);
@@ -86,9 +87,11 @@ const updateUser = async (req, res, next) => {
             return next(new AppError('User not found', 404));
         }
 
+        const updatedUser = await userModel.getById(id);
+
         return res.json({
             message: "User updated successfully",
-            data: { id, name, email, phone_number, role }
+            data: updatedUser
         });
 
     

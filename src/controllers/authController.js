@@ -18,9 +18,13 @@ const login = async (req, res, next) => {
         }
         
         const user = await userModel.getByEmail(email);
+        if (!user) {
+            return next(new AppError('Email not found', 404));
+        }
 
-        if (!user || !(await comparePW(password, user.password))) {
-            return next(new AppError('Invalid email or password', 401));
+        const passwordMatch = await comparePW(password, user.password);
+        if (!passwordMatch) {
+            return next(new AppError('Invalid password', 401));
         }
 
         const payload = { id: user.id, role: user.role };
@@ -41,6 +45,7 @@ const login = async (req, res, next) => {
                 id: user.id,
                 name: user.name,
                 email: user.email,
+                phone_number: user.phone_number,
                 role: user.role
             }
         });
@@ -82,6 +87,8 @@ const register = async (req, res, next) => {
                 name: newUser.name,
                 email: newUser.email,
                 phone_number: newUser.phone_number,
+                created_at: newUser.created_at,
+                updated_at: newUser.updated_at,
                 role: newUser.role
             }
         });

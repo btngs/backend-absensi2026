@@ -123,14 +123,7 @@ const swaggerDocument = {
         properties: {
           message: { type: 'string', example: 'User created successfully' },
           data: {
-            type: 'object',
-            properties: {
-              id: { type: 'integer', example: 1 },
-              name: { type: 'string', example: 'John Doe' },
-              email: { type: 'string', example: 'john@example.com' },
-              phone_number: { type: 'string', example: '081234567890' },
-              role: { type: 'string', example: 'karyawan' }
-            }
+            '$ref': '#/components/schemas/UserItem'
           }
         }
       },
