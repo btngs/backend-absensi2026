@@ -51,16 +51,16 @@ const login = async (req, res, next) => {
 
 const register = async (req, res, next) => {
     try {
-        const { name, email, password } = req.body || {};
-        if (!name || !email || !password) {
-            return next(new AppError('Name, email and password are required', 400));
+        const { name, email, phone_number, password } = req.body || {};
+        if (!name || !email || !phone_number || !password) {
+            return next(new AppError('Name, email, phone number and password are required', 400));
         }
 
         const user = await userModel.getByEmail(email);
         if (user) return next(new AppError('User already exists', 409));
 
         const hashedPassword = await hashPW(password);
-        const newUserId = await userModel.create({ name, email, password: hashedPassword, role: 'karyawan' });
+        const newUserId = await userModel.create({ name, email, phone_number, password: hashedPassword, role: 'karyawan' });
         const newUser = await userModel.getById(newUserId);
 
         const payload = { id: newUser.id, role: newUser.role };
@@ -81,6 +81,7 @@ const register = async (req, res, next) => {
                 id: newUser.id,
                 name: newUser.name,
                 email: newUser.email,
+                phone_number: newUser.phone_number,
                 role: newUser.role
             }
         });

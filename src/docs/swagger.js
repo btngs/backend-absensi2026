@@ -31,6 +31,7 @@ const swaggerDocument = {
           id: { type: 'integer', example: 1 },
           name: { type: 'string', example: 'John Doe' },
           email: { type: 'string', example: 'john@example.com' },
+          phone_number: { type: 'string', example: '081234567890' },
           role: { type: 'string', example: 'karyawan' }
         }
       },
@@ -44,19 +45,21 @@ const swaggerDocument = {
       },
       RegisterRequest: {
         type: 'object',
-        required: ['name', 'email', 'password'],
+        required: ['name', 'email', 'phone_number', 'password'],
         properties: {
           name: { type: 'string', example: 'John Doe' },
           email: { type: 'string', example: 'john@example.com' },
+          phone_number: { type: 'string', example: '081234567890' },
           password: { type: 'string', example: 'password123' }
         }
       },
       CreateUserRequest: {
         type: 'object',
-        required: ['name', 'email', 'password', 'role'],
+        required: ['name', 'email', 'phone_number', 'password', 'role'],
         properties: {
           name: { type: 'string', example: 'John Doe' },
           email: { type: 'string', example: 'john@example.com' },
+          phone_number: { type: 'string', example: '081234567890' },
           password: { type: 'string', example: 'password123' },
           role: { type: 'string', example: 'karyawan' }
         }
@@ -89,9 +92,21 @@ const swaggerDocument = {
           data: {
             type: 'array',
             items: {
-              type: 'object'
+              '$ref': '#/components/schemas/UserItem'
             }
           }
+        }
+      },
+      UserItem: {
+        type: 'object',
+        properties: {
+          id: { type: 'integer', example: 1 },
+          name: { type: 'string', example: 'John Doe' },
+          email: { type: 'string', example: 'john@example.com' },
+          phone_number: { type: 'string', example: '081234567890' },
+          role: { type: 'string', example: 'admin' },
+          created_at: { type: 'string', example: '2026-08-11T08:00:00.000Z' },
+          updated_at: { type: 'string', example: '2026-08-11T08:00:00.000Z' }
         }
       },
       UserResponse: {
@@ -99,13 +114,7 @@ const swaggerDocument = {
         properties: {
           message: { type: 'string', example: 'success' },
           data: {
-            type: 'object',
-            properties: {
-              id: { type: 'integer', example: 1 },
-              name: { type: 'string', example: 'John Doe' },
-              email: { type: 'string', example: 'john@example.com' },
-              role: { type: 'string', example: 'karyawan' }
-            }
+            '$ref': '#/components/schemas/UserItem'
           }
         }
       },
@@ -119,6 +128,7 @@ const swaggerDocument = {
               id: { type: 'integer', example: 1 },
               name: { type: 'string', example: 'John Doe' },
               email: { type: 'string', example: 'john@example.com' },
+              phone_number: { type: 'string', example: '081234567890' },
               role: { type: 'string', example: 'karyawan' }
             }
           }
@@ -166,6 +176,7 @@ const swaggerDocument = {
                         id: 1,
                         name: 'John Doe',
                         email: 'john@example.com',
+                        phone_number: '081234567890',
                         role: 'karyawan'
                       }
                     }
@@ -205,6 +216,7 @@ const swaggerDocument = {
                         id: 2,
                         name: 'Jane Doe',
                         email: 'jane@example.com',
+                        phone_number: '081234567891',
                         role: 'karyawan'
                       }
                     }
@@ -292,6 +304,7 @@ const swaggerDocument = {
                           id: 1,
                           name: 'John Doe',
                           email: 'john@example.com',
+                          phone_number: '081234567890',
                           role: 'admin'
                         }
                       ]
@@ -333,6 +346,7 @@ const swaggerDocument = {
                         id: 1,
                         name: 'John Doe',
                         email: 'john@example.com',
+                        phone_number: '081234567890',
                         role: 'karyawan'
                       }
                     }
@@ -372,6 +386,7 @@ const swaggerDocument = {
                         id: 3,
                         name: 'Jane Doe',
                         email: 'jane@example.com',
+                        phone_number: '081234567891',
                         role: 'karyawan'
                       }
                     }
@@ -418,6 +433,7 @@ const swaggerDocument = {
                         id: 3,
                         name: 'Jane Doe',
                         email: 'jane@example.com',
+                        phone_number: '081234567891',
                         role: 'admin'
                       }
                     }
