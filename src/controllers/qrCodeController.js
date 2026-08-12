@@ -3,6 +3,18 @@ const { AppError } = require('../middleware/errorHandler');
 const crypto = require('crypto');
 
 const qrCodeController = {
+    getAllQR: async(req, res, next) => {
+        try {
+            const result = await qrCodeModel.getAll();
+            return res.status(200).json({
+                message: "success",
+                data: result
+            })
+        } catch (error) {
+
+        }
+    },
+
     generateQR: async(req, res, next) => {
         try{
             const prefix = 'QR-ABSEN';
