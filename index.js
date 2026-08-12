@@ -5,7 +5,8 @@ const swaggerDocument = require('./src/docs/swagger');
 //routes
 const usersRoutes = require('./src/routes/users');
 const authRoutes = require('./src/routes/authroutes');
-const attendanceRoutes = require('./src/routes/attendanceRoutes')
+const attendanceRoutes = require('./src/routes/attendanceRoutes');
+const qrCodeRoutes = require('./src/routes/qrCodeRoutes');
 
 //middleware
 const middlewareLog = require('./src/middleware/logs');
@@ -67,6 +68,7 @@ app.get('/api-docs', (req, res) => {
 app.use('/users', usersRoutes);
 app.use('/auth', authRoutes);
 app.use('/attendance', attendanceRoutes);
+app.use('/qr-code', qrCodeRoutes);
 app.use(notFoundHandler);
 app.use(errorHandler);
 

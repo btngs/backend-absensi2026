@@ -1,23 +1,31 @@
 const AttendanceModel = require('../models/attendanceModel');
 const { AppError } = require('../middleware/errorHandler');
+const qrCodeModel = require('../models/qrCodeModel');
 
 const attendanceController = {
   checkIn: async (req, res, next) => {
     try {
       const userId = req.user.id;
-      const { status = 'Hadir', keterangan = '' } = req.body;
+      const { qr_code, status = 'Hadir', keterangan = '' } = req.body;
+      const validQR = await qrCodeModel.findValidCode(qr_code);
+
+      if(!validQR) {
+        return next(new AppError('QR Code Expired'))
+      }
 
       const now = new Date();
       const tanggal = now.toISOString().split('T')[0];
       const jamMasuk = now.toTimeString().split(' ')[0];
 
       const existingAttendance = await AttendanceModel.findByUserAndDate(userId, tanggal);
+
       if (existingAttendance) {
         return next(new AppError('Anda sudah melakukan absensi masuk hari ini', 400));
       }
 
       const result = await AttendanceModel.createCheckIn({
         userId,
+        qrcodeId: validQR.id,
         tanggal,
         jamMasuk,
         status,
@@ -30,6 +38,7 @@ const attendanceController = {
         data: {
           id: result.insertId,
           user_id: userId,
+          qrcode_id: validQR.id,
           tanggal,
           jam_masuk: jamMasuk,
           status,
