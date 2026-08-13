@@ -14,7 +14,8 @@ const swaggerDocument = {
   tags: [
     { name: 'Auth', description: 'Autentikasi dan token' },
     { name: 'Users', description: 'Manajemen user' },
-    { name: 'Attendance', description: 'Absensi masuk, keluar, dan histori' }
+    { name: 'Attendance', description: 'Absensi masuk, keluar, dan histori' },
+    { name: 'QR Code', description: 'Generate dan daftar QR code absensi' }
   ],
   components: {
     securitySchemes: {
@@ -137,6 +138,34 @@ const swaggerDocument = {
           jam_keluar: { type: 'string', example: '17:00:00' },
           status: { type: 'string', example: 'Hadir' },
           keterangan: { type: 'string', example: 'On site' }
+        }
+      },
+      QRCodeItem: {
+        type: 'object',
+        properties: {
+          id: { type: 'integer', example: 1 },
+          code: { type: 'string', example: 'QR-ABSEN-1A2B3C4D' },
+          expired_at: { type: 'string', example: '2026-08-13T12:30:00.000Z' },
+          is_active: { type: 'integer', example: 1 },
+          created_at: { type: 'string', example: '2026-08-13T12:25:00.000Z' },
+          updated_at: { type: 'string', example: '2026-08-13T12:25:00.000Z' }
+        }
+      },
+      QRCodeListResponse: {
+        type: 'object',
+        properties: {
+          message: { type: 'string', example: 'success' },
+          data: {
+            type: 'array',
+            items: { '$ref': '#/components/schemas/QRCodeItem' }
+          }
+        }
+      },
+      QRCodeCreateResponse: {
+        type: 'object',
+        properties: {
+          message: { type: 'string', example: 'success creating QR' },
+          data: { '$ref': '#/components/schemas/QRCodeItem' }
         }
       }
     }
@@ -705,6 +734,72 @@ const swaggerDocument = {
             }
           },
           404: { description: 'Data absensi tidak ditemukan' }
+        }
+      }
+    },
+    '/qr-code': {
+      get: {
+        tags: ['QR Code'],
+        summary: 'Ambil semua QR code',
+        security: [{ bearerAuth: [] }],
+        responses: {
+          200: {
+            description: 'Daftar QR code berhasil diambil',
+            content: {
+              'application/json': {
+                schema: { '$ref': '#/components/schemas/QRCodeListResponse' },
+                examples: {
+                  success: {
+                    value: {
+                      message: 'success',
+                      data: [
+                        {
+                          id: 1,
+                          code: 'QR-ABSEN-1A2B3C4D',
+                          expired_at: '2026-08-13T12:30:00.000Z',
+                          is_active: 1,
+                          created_at: '2026-08-13T12:25:00.000Z',
+                          updated_at: '2026-08-13T12:25:00.000Z'
+                        }
+                      ]
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    '/qr-code/create': {
+      post: {
+        tags: ['QR Code'],
+        summary: 'Generate QR code baru',
+        security: [{ bearerAuth: [] }],
+        responses: {
+          201: {
+            description: 'QR code berhasil dibuat',
+            content: {
+              'application/json': {
+                schema: { '$ref': '#/components/schemas/QRCodeCreateResponse' },
+                examples: {
+                  success: {
+                    value: {
+                      message: 'success creating QR',
+                      data: {
+                        id: 1,
+                        code: 'QR-ABSEN-1A2B3C4D',
+                        expired_at: '2026-08-13T12:30:00.000Z',
+                        is_active: 1,
+                        created_at: '2026-08-13T12:25:00.000Z',
+                        updated_at: '2026-08-13T12:25:00.000Z'
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
         }
       }
     }
