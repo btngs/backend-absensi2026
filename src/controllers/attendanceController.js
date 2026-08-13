@@ -7,10 +7,13 @@ const attendanceController = {
     try {
       const userId = req.user.id;
       const { qr_code, status = 'Hadir', keterangan = '' } = req.body;
+      if (!qr_code) {
+        return next(new AppError('QR code is required', 400));
+      }
       const validQR = await qrCodeModel.findValidCode(qr_code);
 
       if(!validQR) {
-        return next(new AppError('QR Code Expired', 400))
+        return next(new AppError('QR Code not valid or expired', 400))
       }
 
       const now = new Date();
@@ -25,7 +28,6 @@ const attendanceController = {
 
       const result = await AttendanceModel.createCheckIn({
         userId,
-        qrcodeId: validQR.id,
         tanggal,
         jamMasuk,
         status,
@@ -38,7 +40,6 @@ const attendanceController = {
         data: {
           id: result.insertId,
           user_id: userId,
-          qrcode_id: validQR.id,
           tanggal,
           jam_masuk: jamMasuk,
           status,
