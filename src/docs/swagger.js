@@ -771,6 +771,41 @@ const swaggerDocument = {
         }
       }
     },
+    '/qr-code/active': {
+      get: {
+        tags: ['QR Code'],
+        summary: 'Ambil QR code aktif terbaru',
+        security: [{ bearerAuth: [] }],
+        responses: {
+          200: {
+            description: 'QR code aktif berhasil diambil',
+            content: {
+              'application/json': {
+                schema: { '$ref': '#/components/schemas/QRCodeCreateResponse' },
+                examples: {
+                  success: {
+                    value: {
+                      message: 'success',
+                      data: {
+                        id: 1,
+                        code: 'QR-ABSEN-1A2B3C4D',
+                        expired_at: '2026-08-13T12:30:00.000Z',
+                        is_active: 1,
+                        created_at: '2026-08-13T12:25:00.000Z',
+                        updated_at: '2026-08-13T12:25:00.000Z'
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          404: {
+            description: 'QR code aktif tidak ditemukan'
+          }
+        }
+      }
+    },
     '/qr-code/create': {
       post: {
         tags: ['QR Code'],

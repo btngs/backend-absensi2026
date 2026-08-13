@@ -68,24 +68,34 @@ const updateUser = async (req, res, next) => {
         const { id } = req.params;
         const { name, email, phone_number, password, role } = req.body || {};
 
-        if (!name || !email || !phone_number || !password || !role) {
-            return next(new AppError('All fields are required', 400, {
+        if (!name || !email || !phone_number) {
+            return next(new AppError('Name, email, and phone number are required', 400, {
                 example: {
-                    name: 'name',
-                    email: 'name@example.com',
+                    name: 'John Doe',
+                    email: 'john@example.com',
                     phone_number: '081234567890',
-                    password: 'password',
-                    role: 'karyawan'
+                    role: 'karyawan',
+                    password: 'password'
                 }
             }));
         }
 
-        const hashedPassword = await hashPW(password)
-
-        const affectedRows = await userModel.update(id, { name, email, phone_number, password: hashedPassword, role });
-        if (affectedRows === 0) {
+        const existingUser = await userModel.getById(id);
+        if (!existingUser) {
             return next(new AppError('User not found', 404));
         }
+
+        const updateData = { name, email, phone_number };
+
+        if (role) {
+            updateData.role = role;
+        }
+
+        if (password && password.trim() !== '') {
+            updateData.password = await hashPW(password);
+        }
+
+        await userModel.update(id, updateData);
 
         const updatedUser = await userModel.getById(id);
 
@@ -94,13 +104,10 @@ const updateUser = async (req, res, next) => {
             data: updatedUser
         });
 
-    
-
     } catch (error) {
         next(error);
     }
-
-}
+};
 
 const deleteUser = async(req, res, next) => {
     try {

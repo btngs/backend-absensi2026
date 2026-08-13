@@ -27,10 +27,9 @@ const userModel = {
     },
 
     update: async (id, userData) => {
-        const { name, email, phone_number, password, role } = userData;
-        const [result] = await conn.execute(
-            'UPDATE users SET name = ?, email = ?, phone_number = ?, password = ?, role = ?, updated_at = CURRENT_TIMESTAMP WHERE id = ?',
-            [name, email, phone_number, password, role, id]
+        const dataToUpdate = {...userData, updated_at: new Date()};
+        const [result] = await conn.query(
+            'UPDATE users SET ? WHERE id = ?', [dataToUpdate, id]
         );
         return result.affectedRows;
     },

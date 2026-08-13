@@ -10,7 +10,7 @@ const attendanceController = {
       const validQR = await qrCodeModel.findValidCode(qr_code);
 
       if(!validQR) {
-        return next(new AppError('QR Code Expired'))
+        return next(new AppError('QR Code Expired', 400))
       }
 
       const now = new Date();
