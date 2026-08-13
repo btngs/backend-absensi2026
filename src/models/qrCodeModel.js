@@ -9,7 +9,7 @@ const qrCodeModel = {
     },
     
     create: async(code, expiredAt) => {
-        const query = 'INSERT INTO qr_codes (code, expired_at, is_active, updated_at) VALUES (?, ?, 1, NOW(), NOW())';
+        const query = 'INSERT INTO qr_codes (code, expired_at, is_active, created_at, updated_at) VALUES (?, ?, 1, NOW(), NOW())';
         const [result] = await conn.execute(query, [code, expiredAt]);
 
         return result;
