@@ -3,5 +3,7 @@ const qrCodeController = require('../controllers/qrCodeController');
 const { authToken, authorizeRole } = require('../middleware/authMiddleware');
 const router = express.Router();
 
-router.get('/', authorizeRole('admin'), qrCodeController.get)
+router.get('/', authorizeRole('admin'), qrCodeController.getAll)
 router.post('/create', authorizeRole('admin'), qrCodeController.generateQR);
+
+module.exports = router;

@@ -3,7 +3,7 @@ const { AppError } = require('../middleware/errorHandler');
 const crypto = require('crypto');
 
 const qrCodeController = {
-    getAllQR: async(req, res, next) => {
+    getAll: async(req, res, next) => {
         try {
             const result = await qrCodeModel.getAll();
             return res.status(200).json({
@@ -11,7 +11,7 @@ const qrCodeController = {
                 data: result
             })
         } catch (error) {
-
+            next(error);
         }
     },
 
